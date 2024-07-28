@@ -6,8 +6,8 @@
 use defmt_rtt as _;
 use panic_probe as _;
 use rumcake::keyboard;
+use rumcake::keyboard::build_direct_pin_matrix;
 use rumcake::keyboard::build_layout;
-use rumcake::keyboard::build_standard_matrix;
 use rumcake::keyboard::Keyboard;
 use rumcake::keyboard::KeyboardLayout;
 use rumcake::keyboard::KeyboardMatrix;
@@ -30,10 +30,7 @@ impl USBKeyboard for MyKeyboard {
 impl KeyboardMatrix for MyKeyboard {
     type Layout = Self;
 
-    build_standard_matrix! {
-        rows: [],
-        cols: [],
-    }
+    build_direct_pin_matrix! { [ PIN_9 ] }
 }
 
 impl KeyboardLayout for MyKeyboard {

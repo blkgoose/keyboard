@@ -1,14 +1,8 @@
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = [
-  "probe-run",
-  "--chip",
-  "STM32F303CBTx",
-  "--log-format",
-  "{t} [ {L}] {f}:{l} {s}"
-]
+runner = ["runner", "/dev/ignition_dfu"]
 
 [build]
-target = "thumbv7em-none-eabihf"
+target = "thumbv6m-none-eabi"
 rustflags = ["-Z", "macro-backtrace"]
 
 [env]

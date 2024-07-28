@@ -30,11 +30,11 @@ impl USBKeyboard for MyKeyboard {
 impl KeyboardMatrix for MyKeyboard {
     type Layout = Self;
 
-    build_direct_pin_matrix! { [ PIN_9 ] }
+    build_direct_pin_matrix! { [ PIN_9 PIN_12 ] }
 }
 
 impl KeyboardLayout for MyKeyboard {
     build_layout! {
-        { [ 1 ] }
+        { [ 1 2 ] }
     }
 }

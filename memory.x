@@ -1,9 +1,15 @@
-MEMORY
-{
-    FLASH : ORIGIN = 0x08000000, LENGTH =  128K /* BANK_1 */ /* Subtract the size of the CONFIG section from FLASH, if you're using storage */
-    CONFIG: ORIGIN = ORIGIN(FLASH) + LENGTH(FLASH), LENGTH = 0K /* Change this to a multiple of your chip's erase size, if you're using storage */
-    RAM   : ORIGIN = 0x20000000, LENGTH =   32K
+MEMORY {
+    BOOT2 : ORIGIN = 0x10000000, LENGTH = 0x100
+    FLASH : ORIGIN = 0x10000100, LENGTH = 2048K - 0x100
+    RAM   : ORIGIN = 0x20000000, LENGTH = 256K
 }
 
-__config_start = ORIGIN(CONFIG) - ORIGIN(FLASH);
-__config_end = __config_start + LENGTH(CONFIG);
+EXTERN(BOOT2_FIRMWARE)
+
+SECTIONS {
+    /* ### Boot loader */
+    .boot2 ORIGIN(BOOT2) :
+    {
+        KEEP(*(.boot2));
+    } > BOOT2
+} INSERT BEFORE .text;

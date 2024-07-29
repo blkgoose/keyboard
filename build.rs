@@ -7,6 +7,7 @@ use std::{env, fs};
 
 #[derive(Debug, Deserialize)]
 #[serde(untagged)]
+#[allow(dead_code)]
 enum Dependency {
     String(String),
     Object { features: Option<Vec<String>> },
@@ -67,4 +68,3 @@ fn find_rumcake_features() -> Vec<String> {
 
     features
 }
-

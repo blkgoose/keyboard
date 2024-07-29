@@ -18,7 +18,6 @@ pub struct MyKeyboard;
 
 impl Keyboard for MyKeyboard {
     const MANUFACTURER: &'static str = "Stronzo";
-
     const PRODUCT: &'static str = "Stronzo";
 }
 
@@ -30,11 +29,20 @@ impl USBKeyboard for MyKeyboard {
 impl KeyboardMatrix for MyKeyboard {
     type Layout = Self;
 
-    build_direct_pin_matrix! { [ PIN_9 PIN_12 ] }
+    build_direct_pin_matrix! {
+        [ PIN_2  PIN_3  PIN_4  PIN_5  PIN_6  ]
+        [ PIN_7  PIN_8  PIN_9  PIN_12 PIN_13 ]
+        [ PIN_14 PIN_15 PIN_16 PIN_21 PIN_23 ]
+        [ No     No     No     PIN_20 PIN_22 ]
+    }
 }
 
 impl KeyboardLayout for MyKeyboard {
     build_layout! {
-        { [ 1 2 ] }
+        { [ Q  W  E  R     T    ]
+          [ A  S  D  F     G    ]
+          [ Z  X  C  V     B    ]
+          [ No No No Space LGui ]
+        }
     }
 }

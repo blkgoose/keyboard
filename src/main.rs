@@ -8,25 +8,25 @@ use panic_probe as _;
 use rumcake::keyboard;
 use rumcake::keyboard::build_direct_pin_matrix;
 use rumcake::keyboard::build_layout;
-use rumcake::keyboard::Keyboard;
+use rumcake::keyboard::Keyboard as RumcakeKeyboard;
 use rumcake::keyboard::KeyboardLayout;
 use rumcake::keyboard::KeyboardMatrix;
 use rumcake::usb::USBKeyboard;
 
 #[keyboard(usb)]
-pub struct MyKeyboard;
+pub struct Keyboard;
 
-impl Keyboard for MyKeyboard {
+impl RumcakeKeyboard for Keyboard {
     const MANUFACTURER: &'static str = "blkgoose";
     const PRODUCT: &'static str = "keyboard";
 }
 
-impl USBKeyboard for MyKeyboard {
+impl USBKeyboard for Keyboard {
     const USB_VID: u16 = 0x2E8A;
     const USB_PID: u16 = 0x0003;
 }
 
-impl KeyboardMatrix for MyKeyboard {
+impl KeyboardMatrix for Keyboard {
     type Layout = Self;
 
     build_direct_pin_matrix! {
@@ -37,7 +37,7 @@ impl KeyboardMatrix for MyKeyboard {
     }
 }
 
-impl KeyboardLayout for MyKeyboard {
+impl KeyboardLayout for Keyboard {
     build_layout! {
         { [ Q  W  E  R     T    ]
           [ A  S  D  F     G    ]

@@ -17,8 +17,8 @@ use rumcake::usb::USBKeyboard;
 pub struct MyKeyboard;
 
 impl Keyboard for MyKeyboard {
-    const MANUFACTURER: &'static str = "Stronzo";
-    const PRODUCT: &'static str = "Stronzo";
+    const MANUFACTURER: &'static str = "blkgoose";
+    const PRODUCT: &'static str = "keyboard";
 }
 
 impl USBKeyboard for MyKeyboard {

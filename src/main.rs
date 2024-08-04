@@ -1,6 +1,5 @@
 #![no_main]
 #![no_std]
-#![feature(macro_metavar_expr)]
 #![feature(type_alias_impl_trait)]
 
 use defmt_rtt as _;
@@ -46,12 +45,12 @@ impl USBKeyboard for GooseLeft {
     const USB_PID: u16 = 0x8029;
 }
 impl BluetoothKeyboard for GooseLeft {
-    const BLE_VID: u16 = 0x0000;
-    const BLE_PID: u16 = 0x0000;
+    const BLE_VID: u16 = 0x666a;
+    const BLE_PID: u16 = 0x000a;
 }
 
 impl BluetoothDevice for GooseLeft {
-    const BLUETOOTH_ADDRESS: [u8; 6] = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
+    const BLUETOOTH_ADDRESS: [u8; 6] = [0xd3, 0x68, 0x14, 0xc9, 0x65, 0x3b];
 }
 
 setup_adc_sampler! {

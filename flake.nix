@@ -12,12 +12,34 @@
         libudev =
           "${nixpkgs.lib.makeLibraryPath [ pkgs.libudev-zero ]}/pkgconfig";
 
+        elf2uf2 = pkgs.rustPlatform.buildRustPackage rec {
+          pname = "elf2uf2-rs";
+          version = "2.0.0";
+
+          doCheck = false;
+
+          src = pkgs.fetchFromGitHub {
+            owner = "simmsb";
+            repo = "elf2uf2-rs";
+            rev = "034d4ed6fe4b8cf435436c73e98ffb1d64afcf92";
+            sha256 = "sha256-EgExfWVsI14t+v6J5hYk8IUy4kaJLUK/Qsstc81INMs=";
+          };
+
+          nativeBuildInputs = [ pkgs.pkg-config ];
+
+          buildInputs = [ pkgs.udev ];
+
+          cargoHash = "sha256-tiOLxAKVrPrePVYs1KOc2vLnLjwjrhSQKL15yU3q/u8=";
+        };
+
         runner = pkgs.writers.writeBashBin "runner" ''
+          set -e
+
           output=$1
           input=$2
 
-          elf2uf2-rs $input /tmp/runner-keyboard-build.uf2
-          cp /tmp/runner-keyboard-build.uf2 $output
+          ${elf2uf2}/bin/elf2uf2-rs $input /tmp/runner-keyboard-build.uf2
+          sudo cp /tmp/runner-keyboard-build.uf2 $output
           rm /tmp/runner-keyboard-build.uf2
         '';
 
@@ -28,13 +50,12 @@
           buildInputs = with pkgs; [
             xz
             lld
-            probe-rs
-            runner
             bacon
             cargo-make
             cargo-watch
             cargo-binutils
             usbutils
+            runner
           ];
         };
       });

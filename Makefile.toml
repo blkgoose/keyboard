@@ -30,30 +30,30 @@ args = ["-p", "${out}"]
 dependencies = ["create-output-dir", "compile-left"]
 command = "cargo"
 args = [
-  "objcopy",
-  "--quiet",
-  "--bin=central",
-  "--release",
-  "--features=${left_features}",
-  "--",
-  "-O",
-  "binary",
-  "${out}/left.bin",
+    "objcopy",
+    "--quiet",
+    "--bin=central",
+    "--release",
+    "--features=${left_features}",
+    "--",
+    "-O",
+    "binary",
+    "${out}/left.bin",
 ]
 
 [tasks.build-right]
 dependencies = ["create-output-dir", "compile-right"]
-command = "cargo"
+command = "elf2uf2-rs"
 args = [
-  "objcopy",
-  "--quiet",
-  "--bin=right",
-  "--release",
-  "--features=${right_features}",
-  "--",
-  "-O",
-  "binary",
-  "${out}/right.bin",
+    "objcopy",
+    "--quiet",
+    "--bin=right",
+    "--release",
+    "--features=${right_features}",
+    "--",
+    "-O",
+    "binary",
+    "${out}/right.bin",
 ]
 
 [tasks.compile-left]
@@ -71,9 +71,8 @@ dependencies = ["install-left", "install-right"]
 
 [tasks.install-left]
 dependencies = ["build-left"]
-install_crate = "uf2conv"
-command = "uf2conv"
-# args = ["run", "--bin=central", "--release", "--features=${left_features}"]
+command = "cargo"
+args = ["run", "--bin=central", "--release", "--features=${left_features}"]
 
 [tasks.install-right]
 dependencies = ["build-right"]

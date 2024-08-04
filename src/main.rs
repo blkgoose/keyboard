@@ -5,44 +5,69 @@
 
 use defmt_rtt as _;
 use panic_probe as _;
-use rumcake::keyboard;
-use rumcake::keyboard::build_direct_pin_matrix;
-use rumcake::keyboard::build_layout;
-use rumcake::keyboard::Keyboard as RumcakeKeyboard;
-use rumcake::keyboard::KeyboardLayout;
-use rumcake::keyboard::KeyboardMatrix;
-use rumcake::usb::USBKeyboard;
 
-#[keyboard(usb)]
-pub struct Keyboard;
+use rumcake::{
+    bluetooth::BluetoothKeyboard,
+    drivers::nrf_ble::central::setup_nrf_ble_split_central,
+    hw::platform::{setup_adc_sampler, BluetoothDevice},
+    keyboard,
+    keyboard::{build_direct_pin_matrix, build_layout, Keyboard, KeyboardLayout, KeyboardMatrix},
+    split::central::{CentralDevice, CentralDeviceDriver},
+    usb::USBKeyboard,
+};
 
-impl RumcakeKeyboard for Keyboard {
-    const MANUFACTURER: &'static str = "blkgoose";
-    const PRODUCT: &'static str = "keyboard";
-}
-
-impl USBKeyboard for Keyboard {
-    const USB_VID: u16 = 0x2E8A;
-    const USB_PID: u16 = 0x0003;
-}
-
-impl KeyboardMatrix for Keyboard {
-    type Layout = Self;
-
-    build_direct_pin_matrix! {
-        [ PIN_2  PIN_3  PIN_4  PIN_5  PIN_6  ]
-        [ PIN_7  PIN_8  PIN_9  PIN_12 PIN_13 ]
-        [ PIN_14 PIN_15 PIN_16 PIN_21 PIN_23 ]
-        [ No     No     No     PIN_20 PIN_22 ]
+async fn setup_nrf_ble() -> (impl CentralDeviceDriver, &'static [[u8; 6]]) {
+    setup_nrf_ble_split_central! {
+        peripheral_addresses: [[0x00, 0x00, 0x00, 0x00, 0x00, 0x00]]
     }
 }
 
-impl KeyboardLayout for Keyboard {
+#[keyboard(
+    usb,
+    bluetooth,
+    split_central(
+        driver_setup_fn = setup_nrf_ble,
+        driver_type = "nrf-ble"
+    )
+)]
+pub struct GooseLeft;
+
+impl CentralDevice for GooseLeft {
+    type Layout = Self;
+}
+
+impl Keyboard for GooseLeft {
+    const MANUFACTURER: &'static str = "blkgoose";
+    const PRODUCT: &'static str = "goose-1";
+}
+
+impl USBKeyboard for GooseLeft {
+    const USB_VID: u16 = todo!();
+    const USB_PID: u16 = todo!();
+}
+impl BluetoothKeyboard for GooseLeft {
+    const BLE_VID: u16 = todo!();
+    const BLE_PID: u16 = todo!();
+}
+
+impl BluetoothDevice for GooseLeft {
+    const BLUETOOTH_ADDRESS: [u8; 6] = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
+}
+
+setup_adc_sampler! {
+    (timer: TIMER1, ppi_ch0: PPI_CH0, ppi_ch1: PPI_CH1) => {}
+}
+
+impl KeyboardMatrix for GooseLeft {
+    type Layout = Self;
+
+    build_direct_pin_matrix! {
+        [ P0_02 ]
+    }
+}
+
+impl KeyboardLayout for GooseLeft {
     build_layout! {
-        { [ Q  W  E  R     T    ]
-          [ A  S  D  F     G    ]
-          [ Z  X  C  V     B    ]
-          [ No No No Space LGui ]
-        }
+        { [ 1 ] }
     }
 }

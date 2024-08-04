@@ -1,9 +1,9 @@
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = ["runner", "/dev/ignition_dfu"]
+runner = ["echo 'change with a runner command'"]
 
 [build]
-target = "thumbv6m-none-eabi"
+target = "thumbv7em-none-eabihf"
 rustflags = ["-Z", "macro-backtrace"]
 
 [env]
-DEFMT_LOG = "debug"
+DEFMT_LOG = "debug,rumcake::keyboard=off"

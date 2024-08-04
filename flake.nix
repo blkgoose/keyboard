@@ -25,7 +25,15 @@
         devShell = pkgs.mkShell {
           PKG_CONFIG_PATH = nixpkgs.lib.concatStringsSep ":" [ xz libudev ];
 
-          buildInputs = with pkgs; [ xz lld probe-rs runner ];
+          buildInputs = with pkgs; [
+            xz
+            lld
+            probe-rs
+            runner
+            bacon
+            cargo-make
+            cargo-watch
+          ];
         };
       });
 }

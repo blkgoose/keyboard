@@ -1,0 +1,29 @@
+[env]
+left_features = ["rumcake/split-central", "rumcake/bluetooth", "rumcake/usb"]
+right_features = ["rumcake/split-peripheral"]
+
+[tasks.check]
+dependencies = ["check-left", "check-right"]
+
+[tasks.check-left]
+command = "cargo"
+args = [
+    "check",
+    "--bin=central",
+    "--features=rumcake/split-central rumcake/bluetooth rumcake/usb",
+]
+watch = true
+
+[tasks.check-right]
+command = "cargo"
+args = ["check", "--bin=right", "--features=rumcake/split-peripheral"]
+watch = true
+
+[tasks.build-left]
+command = "cargo"
+args = [
+    "build",
+    "--bin=central",
+    "--features=rumcake/split-central rumcake/bluetooth rumcake/usb",
+]
+watch = true

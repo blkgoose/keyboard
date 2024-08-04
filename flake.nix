@@ -33,6 +33,7 @@
             bacon
             cargo-make
             cargo-watch
+            cargo-binutils
           ];
         };
       });

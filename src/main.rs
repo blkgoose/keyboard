@@ -42,12 +42,12 @@ impl Keyboard for GooseLeft {
 }
 
 impl USBKeyboard for GooseLeft {
-    const USB_VID: u16 = todo!();
-    const USB_PID: u16 = todo!();
+    const USB_VID: u16 = 0x239a;
+    const USB_PID: u16 = 0x8029;
 }
 impl BluetoothKeyboard for GooseLeft {
-    const BLE_VID: u16 = todo!();
-    const BLE_PID: u16 = todo!();
+    const BLE_VID: u16 = 0x0000;
+    const BLE_PID: u16 = 0x0000;
 }
 
 impl BluetoothDevice for GooseLeft {

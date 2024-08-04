@@ -3,7 +3,12 @@ runner = ["runner", "/dev/sda"]
 
 [build]
 target = "thumbv7em-none-eabihf"
-rustflags = ["-Z", "macro-backtrace"]
+rustflags = [
+  "-Z",
+  "macro-backtrace",
+  # test later
+  # "-Z", "trap-unreachable"
+]
 
 [env]
 DEFMT_LOG = "debug,rumcake::keyboard=off"

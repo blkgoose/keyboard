@@ -1,6 +1,7 @@
 [env]
 left_features = "rumcake/split-central rumcake/bluetooth rumcake/usb"
 right_features = "rumcake/split-peripheral"
+out = "target/binout/"
 
 # CHECK
 
@@ -19,51 +20,47 @@ args = ["check", "--bin=right", "--features=${right_features}"]
 # BUILD
 
 [tasks.build]
-dependencies = [
-    "create-output-dir",
-    "build-left",
-    "build-right",
-    "move-left",
-    "move-right",
-]
+dependencies = ["build-left", "build-right"]
 
 [tasks.create-output-dir]
 command = "mkdir"
-args = ["-p", "out"]
-
-[tasks.move-left]
-command = "cargo"
-args = [
-    "objcopy",
-    "--quiet",
-    "--bin=central",
-    "--release",
-    "--features=${left_features}",
-    "--",
-    "-O",
-    "binary",
-    "out/left.bin",
-]
-
-[tasks.move-right]
-command = "cargo"
-args = [
-    "objcopy",
-    "--quiet",
-    "--bin=right",
-    "--release",
-    "--features=${right_features}",
-    "--",
-    "-O",
-    "binary",
-    "out/right.bin",
-]
+args = ["-p", "${out}"]
 
 [tasks.build-left]
+dependencies = ["create-output-dir", "compile-left"]
+command = "cargo"
+args = [
+  "objcopy",
+  "--quiet",
+  "--bin=central",
+  "--release",
+  "--features=${left_features}",
+  "--",
+  "-O",
+  "binary",
+  "${out}/left.bin",
+]
+
+[tasks.build-right]
+dependencies = ["create-output-dir", "compile-right"]
+command = "cargo"
+args = [
+  "objcopy",
+  "--quiet",
+  "--bin=right",
+  "--release",
+  "--features=${right_features}",
+  "--",
+  "-O",
+  "binary",
+  "${out}/right.bin",
+]
+
+[tasks.compile-left]
 command = "cargo"
 args = ["build", "--bin=central", "--release", "--features=${left_features}"]
 
-[tasks.build-right]
+[tasks.compile-right]
 command = "cargo"
 args = ["build", "--bin=right", "--release", "--features=${right_features}"]
 
@@ -73,9 +70,12 @@ args = ["build", "--bin=right", "--release", "--features=${right_features}"]
 dependencies = ["install-left", "install-right"]
 
 [tasks.install-left]
-command = "cargo"
-args = ["run", "--bin=central", "--release", "--features=${left_features}"]
+dependencies = ["build-left"]
+install_crate = "uf2conv"
+command = "uf2conv"
+# args = ["run", "--bin=central", "--release", "--features=${left_features}"]
 
 [tasks.install-right]
+dependencies = ["build-right"]
 command = "cargo"
 args = ["run", "--bin=right", "--release", "--features=${right_features}"]

@@ -34,6 +34,7 @@
             cargo-make
             cargo-watch
             cargo-binutils
+            usbutils
           ];
         };
       });

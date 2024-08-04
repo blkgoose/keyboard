@@ -20,11 +20,11 @@ args = ["check", "--bin=right", "--features=${right_features}"]
 
 [tasks.build]
 dependencies = [
-  "create-output-dir",
-  "build-left",
-  "build-right",
-  "move-left",
-  "move-right",
+    "create-output-dir",
+    "build-left",
+    "build-right",
+    "move-left",
+    "move-right",
 ]
 
 [tasks.create-output-dir]
@@ -34,29 +34,29 @@ args = ["-p", "out"]
 [tasks.move-left]
 command = "cargo"
 args = [
-  "objcopy",
-  "--quiet",
-  "--bin=central",
-  "--release",
-  "--features=${left_features}",
-  "--",
-  "-O",
-  "binary",
-  "out/left.bin",
+    "objcopy",
+    "--quiet",
+    "--bin=central",
+    "--release",
+    "--features=${left_features}",
+    "--",
+    "-O",
+    "binary",
+    "out/left.bin",
 ]
 
 [tasks.move-right]
 command = "cargo"
 args = [
-  "objcopy",
-  "--quiet",
-  "--bin=right",
-  "--release",
-  "--features=${right_features}",
-  "--",
-  "-O",
-  "binary",
-  "out/right.bin",
+    "objcopy",
+    "--quiet",
+    "--bin=right",
+    "--release",
+    "--features=${right_features}",
+    "--",
+    "-O",
+    "binary",
+    "out/right.bin",
 ]
 
 [tasks.build-left]
@@ -66,3 +66,16 @@ args = ["build", "--bin=central", "--release", "--features=${left_features}"]
 [tasks.build-right]
 command = "cargo"
 args = ["build", "--bin=right", "--release", "--features=${right_features}"]
+
+
+# INSTALL
+[tasks.install]
+dependencies = ["install-left", "install-right"]
+
+[tasks.install-left]
+command = "cargo"
+args = ["run", "--bin=central", "--release", "--features=${left_features}"]
+
+[tasks.install-right]
+command = "cargo"
+args = ["run", "--bin=right", "--release", "--features=${right_features}"]

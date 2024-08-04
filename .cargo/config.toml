@@ -1,5 +1,5 @@
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = ["echo 'change with a runner command'"]
+runner = ["runner", "/dev/sda"]
 
 [build]
 target = "thumbv7em-none-eabihf"

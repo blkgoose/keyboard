@@ -1,5 +1,5 @@
 [env]
-left_features = "rumcake/split-central rumcake/bluetooth rumcake/usb"
+left_features = "rumcake/usb"
 right_features = "rumcake/split-peripheral"
 out = "target/binout/"
 
@@ -32,30 +32,30 @@ args = ["-p", "${out}"]
 dependencies = ["create-output-dir", "compile-left"]
 command = "cargo"
 args = [
-    "objcopy",
-    "--quiet",
-    "--bin=central",
-    "--release",
-    "--features=${left_features}",
-    "--",
-    "-O",
-    "binary",
-    "${out}/left.bin",
+  "objcopy",
+  "--quiet",
+  "--bin=central",
+  "--release",
+  "--features=${left_features}",
+  "--",
+  "-O",
+  "binary",
+  "${out}/left.bin",
 ]
 
 [tasks.build-right]
 dependencies = ["create-output-dir", "compile-right"]
 command = "elf2uf2-rs"
 args = [
-    "objcopy",
-    "--quiet",
-    "--bin=right",
-    "--release",
-    "--features=${right_features}",
-    "--",
-    "-O",
-    "binary",
-    "${out}/right.bin",
+  "objcopy",
+  "--quiet",
+  "--bin=right",
+  "--release",
+  "--features=${right_features}",
+  "--",
+  "-O",
+  "binary",
+  "${out}/right.bin",
 ]
 
 [tasks.compile-left]

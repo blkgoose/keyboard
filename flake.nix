@@ -7,7 +7,12 @@
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = import nixpkgs { inherit system; };
+        pkgs = import nixpkgs {
+          inherit system;
+
+          config.allowUnfreePredicate = pkg:
+            builtins.elem (nixpkgs.lib.getName pkg) [ "adafruit-nrfutil" ];
+        };
         xz = "${nixpkgs.lib.makeLibraryPath [ pkgs.xz.dev ]}/pkgconfig";
         libudev =
           "${nixpkgs.lib.makeLibraryPath [ pkgs.libudev-zero ]}/pkgconfig";
@@ -61,6 +66,7 @@
             cargo-binutils
             usbutils
             runner
+            adafruit-nrfutil
           ];
         };
       });

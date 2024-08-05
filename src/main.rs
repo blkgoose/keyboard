@@ -6,34 +6,69 @@ use defmt_rtt as _;
 use panic_probe as _;
 
 use rumcake::{
-    bluetooth::BluetoothKeyboard,
-    drivers::nrf_ble::central::setup_nrf_ble_split_central,
-    hw::platform::{setup_adc_sampler, BluetoothDevice},
+    hw::platform::setup_adc_sampler,
+    keyberon::{
+        action::{
+            k,
+            Action::{self, *},
+            HoldTapAction, HoldTapConfig,
+        },
+        key_code::KeyCode::*,
+    },
     keyboard,
-    keyboard::{build_direct_pin_matrix, build_layout, Keyboard, KeyboardLayout, KeyboardMatrix},
-    split::central::{CentralDevice, CentralDeviceDriver},
+    keyboard::{
+        build_direct_pin_matrix, build_layout, Keyboard, KeyboardLayout, KeyboardMatrix, Keycode,
+    },
     usb::USBKeyboard,
 };
 
-async fn setup_nrf_ble() -> (impl CentralDeviceDriver, &'static [[u8; 6]]) {
-    setup_nrf_ble_split_central! {
-        peripheral_addresses: [[0x00, 0x00, 0x00, 0x00, 0x00, 0x00]]
+impl KeyboardLayout for GooseLeft {
+    build_layout! {
+        {
+            [ Q  W  E  R  T     ]
+            [ {G_A}  {G_S}  {G_D}  {G_F}  G     ]
+            [ Z  X  C  V  B     ]
+            [ No No No {LAYER_1} Space ]
+        }
+        {
+            [ Y t t t t ]
+            [ t t t t t ]
+            [ t t t t t ]
+            [ t t t {LAYER_0} t ]
+        }
     }
 }
 
-#[keyboard(
-    usb,
-    bluetooth,
-    split_central(
-        driver_setup_fn = setup_nrf_ble,
-        driver_type = "nrf-ble"
-    )
-)]
-pub struct GooseLeft;
-
-impl CentralDevice for GooseLeft {
-    type Layout = Self;
+macro_rules! hold_tap {
+    ($hold:expr, $tap:expr) => {
+        HoldTap(&HoldTapAction {
+            timeout: HOLD_TIME,
+            tap_hold_interval: 0,
+            config: HoldTapConfig::Default,
+            hold: $hold,
+            tap: k($tap),
+        })
+    };
 }
+
+const HOLD_TIME: u16 = 200;
+
+const G_A: Action<Keycode> = hold_tap!(k(LCtrl), A);
+const G_S: Action<Keycode> = hold_tap!(k(LShift), S);
+const G_D: Action<Keycode> = hold_tap!(k(LGui), D);
+const G_F: Action<Keycode> = hold_tap!(k(LAlt), F);
+
+const LAYER_0: Action<Keycode> = Action::ToggleLayer(0);
+const LAYER_1: Action<Keycode> = Action::ToggleLayer(1);
+
+/*
+ *
+ * Keyboard configuration
+ *
+ */
+
+#[keyboard(usb)]
+pub struct GooseLeft;
 
 impl Keyboard for GooseLeft {
     const MANUFACTURER: &'static str = "blkgoose";
@@ -41,16 +76,8 @@ impl Keyboard for GooseLeft {
 }
 
 impl USBKeyboard for GooseLeft {
-    const USB_VID: u16 = 0x239a;
+    const USB_VID: u16 = 0x0000;
     const USB_PID: u16 = 0x00b3;
-}
-impl BluetoothKeyboard for GooseLeft {
-    const BLE_VID: u16 = 0x239b;
-    const BLE_PID: u16 = 0x00c3;
-}
-
-impl BluetoothDevice for GooseLeft {
-    const BLUETOOTH_ADDRESS: [u8; 6] = [0xd3, 0x68, 0x14, 0xc9, 0x65, 0x3b];
 }
 
 setup_adc_sampler! {
@@ -61,12 +88,9 @@ impl KeyboardMatrix for GooseLeft {
     type Layout = Self;
 
     build_direct_pin_matrix! {
-        [ P0_02 ]
-    }
-}
-
-impl KeyboardLayout for GooseLeft {
-    build_layout! {
-        { [ 1 ] }
+        [ P0_22 P0_20 P0_17 P0_08 P0_06 ]
+        [ P1_04 P0_11 P1_00 P0_24 P0_31 ]
+        [ P1_15 P1_13 P1_11 P0_10 P0_09 ]
+        [ No    No    No    P0_29 P0_02 ]
     }
 }

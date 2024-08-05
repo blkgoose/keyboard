@@ -157,6 +157,7 @@ checksum = "8ec610d8f49840a5b376c69663b6369e71f4b34484b9b2eb29fb918d92516cb9"
 dependencies = [
  "bare-metal",
  "bitfield 0.13.2",
+ "critical-section",
  "embedded-hal 0.2.7",
  "volatile-register",
 ]
@@ -970,12 +971,9 @@ source = "git+https://github.com/embassy-rs/nrf-softdevice?rev=487f98e#487f98ea0
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
- "critical-section",
- "defmt",
  "embassy-futures 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "embassy-sync 0.2.0",
  "embedded-storage",
- "embedded-storage-async",
  "fixed",
  "futures",
  "heapless 0.7.17",

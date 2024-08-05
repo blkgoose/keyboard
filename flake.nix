@@ -12,7 +12,7 @@
         libudev =
           "${nixpkgs.lib.makeLibraryPath [ pkgs.libudev-zero ]}/pkgconfig";
 
-        elf2uf2 = pkgs.rustPlatform.buildRustPackage rec {
+        elf2uf2 = pkgs.rustPlatform.buildRustPackage {
           pname = "elf2uf2-rs";
           version = "2.0.0";
 
@@ -37,6 +37,11 @@
 
           output=$1
           input=$2
+
+          if [ ! -e $output ]; then
+            echo "ERROR: output not found"
+            exit 1
+          fi
 
           ${elf2uf2}/bin/elf2uf2-rs $input /tmp/runner-keyboard-build.uf2
           sudo cp /tmp/runner-keyboard-build.uf2 $output

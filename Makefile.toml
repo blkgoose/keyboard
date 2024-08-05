@@ -11,10 +11,12 @@ dependencies = ["check-left", "check-right"]
 [tasks.check-left]
 command = "cargo"
 args = ["check", "--bin=central", "--features=${left_features}"]
+watch = true
 
 [tasks.check-right]
 command = "cargo"
 args = ["check", "--bin=right", "--features=${right_features}"]
+watch = true
 
 
 # BUILD
